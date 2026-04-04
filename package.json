@@ -2,11 +2,14 @@
   "name": "polytracker",
   "version": "2.0.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -p tsconfig.build.json"
   },
   "devDependencies": {
     "typescript": "^5.4.0",
-    "@vercel/node": "^3.0.0"
+    "@types/node": "^18.0.0"
   }
 }
