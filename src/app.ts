@@ -113,7 +113,11 @@ async function fetchAllActivity(wallet: string): Promise<ActivityEntry[]> {
   const limit = 500;
   while (true) {
     const res = await fetch(apiUrl(wallet, "activity", offset, limit));
-    if (!res.ok) throw new Error(`API returned ${res.status}`);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({})) as { error?: string; details?: string };
+      const msg = body.error || `API returned ${res.status}`;
+      throw new Error(msg);
+    }
     const batch: ActivityEntry[] = await res.json();
     if (!batch || !Array.isArray(batch) || batch.length === 0) break;
     all = all.concat(batch);
