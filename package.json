@@ -6,10 +6,12 @@
     "node": "22.x"
   },
   "scripts": {
+    "dev": "live-server public --port=3000 --no-browser",
     "build": "tsc -p tsconfig.build.json"
   },
   "devDependencies": {
-    "typescript": "^5.4.0",
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "live-server": "^1.2.2",
+    "typescript": "^5.4.0"
   }
 }
