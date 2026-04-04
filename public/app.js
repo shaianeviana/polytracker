@@ -2,6 +2,7 @@
 const PER_PAGE = 30;
 let allResults = [];
 let profileData = {};
+let rawVolume = 0;
 let currentFilter = "all";
 let currentSearch = "";
 let sortKey = "pnl";
@@ -74,6 +75,11 @@ async function fetchProfile(wallet) {
     catch {
         return {};
     }
+}
+function calculateRawVolume(activities) {
+    return activities
+        .filter(a => (a.type || "").toUpperCase() === "TRADE")
+        .reduce((s, a) => s + (parseFloat(a.usdcSize || "0") || 0), 0);
 }
 // ─── PROCESS ───
 function processActivity(activities) {
@@ -286,6 +292,7 @@ async function loadWallet(wallet) {
             fetchProfile(wallet),
         ]);
         profileData = profile;
+        rawVolume = calculateRawVolume(activities);
         if (!activities || activities.length === 0) {
             document.getElementById("app").innerHTML = `
         <div class="container">
@@ -324,7 +331,7 @@ function renderDashboard() {
     const totalInvested = allResults.reduce((s, d) => s + d.invested, 0);
     const totalVolume = profileData.volume != null
         ? profileData.volume
-        : allResults.reduce((s, d) => s + d.invested + d.sold + d.redeemed, 0);
+        : rawVolume;
     const totalPnl = allResults.reduce((s, d) => s + d.pnl, 0);
     const best = allResults.length > 0
         ? allResults.reduce((b, d) => (d.pnl > b.pnl ? d : b), allResults[0])
