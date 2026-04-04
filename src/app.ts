@@ -266,9 +266,8 @@ function renderLanding(): void {
   document.getElementById("app")!.innerHTML = `
     <div class="landing">
       <div class="hero">
-        <div class="hero-badge">Free and Open Source</div>
+        <div class="hero-badge">Polymarket Dashboard · Free and Open Source</div>
         <h1><span>PolyTracker</span></h1>
-        <p class="hero-subtitle">Your Polymarket Dashboard</p>
         <p>Paste your wallet address and instantly see your full performance: wins, losses, profits, categories and more.</p>
         <div class="wallet-form" id="walletForm">
           <input type="text" class="wallet-input" id="walletInput" placeholder="0x... paste your wallet address" spellcheck="false" autocomplete="off">
