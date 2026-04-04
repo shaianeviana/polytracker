@@ -57,9 +57,15 @@ interface CategoryInfo {
   emoji: string;
 }
 
+interface ProfileData {
+  volume?: number;
+  [key: string]: unknown;
+}
+
 // ─── STATE ───
 const PER_PAGE = 30;
 let allResults: Result[] = [];
+let profileData: ProfileData = {};
 let currentFilter = "all";
 let currentSearch = "";
 let sortKey = "pnl";
@@ -126,6 +132,16 @@ async function fetchAllActivity(wallet: string): Promise<ActivityEntry[]> {
     offset += limit;
   }
   return all;
+}
+
+async function fetchProfile(wallet: string): Promise<ProfileData> {
+  try {
+    const res = await fetch(apiUrl(wallet, "profile"));
+    if (!res.ok) return {};
+    return await res.json();
+  } catch {
+    return {};
+  }
 }
 
 // ─── PROCESS ───
@@ -333,7 +349,11 @@ async function loadWallet(wallet: string): Promise<void> {
   `;
 
   try {
-    const activities = await fetchAllActivity(wallet);
+    const [activities, profile] = await Promise.all([
+      fetchAllActivity(wallet),
+      fetchProfile(wallet),
+    ]);
+    profileData = profile;
     if (!activities || activities.length === 0) {
       document.getElementById("app")!.innerHTML = `
         <div class="container">
@@ -370,7 +390,9 @@ function renderDashboard(): void {
   const resolved = wins.length + losses.length;
   const winRate = resolved > 0 ? (wins.length / resolved) * 100 : 0;
   const totalInvested = allResults.reduce((s, d) => s + d.invested, 0);
-  const totalVolume = allResults.reduce((s, d) => s + d.invested + d.sold + d.redeemed, 0);
+  const totalVolume = profileData.volume != null
+    ? profileData.volume
+    : allResults.reduce((s, d) => s + d.invested + d.sold + d.redeemed, 0);
   const totalPnl = allResults.reduce((s, d) => s + d.pnl, 0);
   const best =
     allResults.length > 0
