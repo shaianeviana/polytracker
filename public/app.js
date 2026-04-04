@@ -184,13 +184,29 @@ function footerHTML() {
     Created by <a href="https://x.com/shaianeviana" target="_blank" rel="noopener noreferrer">shaianeviana</a>
   </footer>`;
 }
+// ─── DARK MODE ───
+function toggleDark() {
+    const isDark = document.body.classList.toggle("dark");
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    updateThemeButton(isDark);
+}
+function updateThemeButton(isDark) {
+    const btn = document.getElementById("themeToggle");
+    if (!btn)
+        return;
+    const icon = isDark
+        ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> Light`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Dark`;
+    btn.innerHTML = icon;
+}
 // ─── LANDING PAGE ───
 function renderLanding() {
     document.getElementById("app").innerHTML = `
     <div class="landing">
       <div class="hero">
-        <div class="hero-badge">📊 100% free · Open Source</div>
-        <h1>Your<br><span>Polymarket</span> dashboard</h1>
+        <div class="hero-badge">100% free · Open Source</div>
+        <h1><span>PolyTracker</span></h1>
+        <p class="hero-subtitle">Your Polymarket Dashboard</p>
         <p>Paste your wallet address and instantly see your full performance: wins, losses, profits, categories and more.</p>
         <div class="wallet-form" id="walletForm">
           <input type="text" class="wallet-input" id="walletInput" placeholder="0x... paste your wallet address" spellcheck="false" autocomplete="off">
@@ -199,17 +215,14 @@ function renderLanding() {
         <div class="wallet-error" id="walletError"></div>
         <div class="features">
           <div class="feature-card">
-            <div class="feature-icon">⚡</div>
             <div class="feature-title">Real-time</div>
             <div class="feature-desc">Data pulled directly from Polymarket's public API, updated every 5 minutes.</div>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🔗</div>
             <div class="feature-title">Shareable</div>
             <div class="feature-desc">Each dashboard generates a unique link you can share with anyone.</div>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">🔒</div>
             <div class="feature-title">No login required</div>
             <div class="feature-desc">No wallet connection or login needed. Just paste the address and go.</div>
           </div>
@@ -457,6 +470,11 @@ function gp(p) {
     renderDashboard();
 }
 // ─── INIT ───
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+    document.body.classList.add("dark");
+    updateThemeButton(true);
+}
 const initWallet = getWalletFromURL();
 if (initWallet && /^0x[a-fA-F0-9]{40}$/.test(initWallet)) {
     loadWallet(initWallet);
