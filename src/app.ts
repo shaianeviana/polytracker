@@ -85,6 +85,7 @@ function goHome(): void {
   allResults = [];
   renderLanding();
   updateHeader();
+  document.body.classList.add("on-landing");
 }
 
 window.addEventListener("popstate", () => {
@@ -320,6 +321,7 @@ async function loadWallet(wallet: string): Promise<void> {
   sortKey = "pnl";
   sortDir = -1;
   currentPage = 1;
+  document.body.classList.remove("on-landing");
   updateHeader();
 
   document.getElementById("app")!.innerHTML = `
@@ -556,6 +558,7 @@ const initWallet = getWalletFromURL();
 if (initWallet && /^0x[a-fA-F0-9]{40}$/.test(initWallet)) {
   loadWallet(initWallet);
 } else {
+  document.body.classList.add("on-landing");
   renderLanding();
   updateHeader();
 }
