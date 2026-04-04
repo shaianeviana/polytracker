@@ -150,7 +150,7 @@ function calculateRawVolume(activities: ActivityEntry[]): number {
   // not USDC paid. Each token has $1 face value, so at avg price ~$0.50
   // this is ~2x the USDC spent — matching what the leaderboard shows.
   return activities
-    .filter(a => (a.type || "").toUpperCase() === "TRADE" && a.side === "BUY")
+    .filter(a => (a.type || "").toUpperCase() === "TRADE")
     .reduce((s, a) => s + (parseFloat(a.size || "0") || 0), 0);
 }
 
