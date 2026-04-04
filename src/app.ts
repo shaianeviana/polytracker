@@ -370,6 +370,7 @@ function renderDashboard(): void {
   const resolved = wins.length + losses.length;
   const winRate = resolved > 0 ? (wins.length / resolved) * 100 : 0;
   const totalInvested = allResults.reduce((s, d) => s + d.invested, 0);
+  const totalVolume = allResults.reduce((s, d) => s + d.invested + d.sold + d.redeemed, 0);
   const totalPnl = allResults.reduce((s, d) => s + d.pnl, 0);
   const best =
     allResults.length > 0
@@ -395,7 +396,7 @@ function renderDashboard(): void {
     <div class="stats-grid">
       ${sc("Total Bets", String(allResults.length), `${wins.length} ✓  ${losses.length} ✗  ${open.length} ◷`, "blue", 0)}
       ${sc("Win Rate", winRate.toFixed(1) + "%", `${wins.length} of ${resolved} resolved`, "blue", 1)}
-      ${sc("Total Invested", "$" + totalInvested.toFixed(2), "Total amount wagered", "", 2)}
+      ${sc("Total Volume", "$" + totalVolume.toFixed(2), "Total USDC traded", "", 2)}
       ${sc(
         "Profit / Loss",
         (totalPnl >= 0 ? "+" : "") + "$" + totalPnl.toFixed(2),

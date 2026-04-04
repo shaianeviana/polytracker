@@ -306,6 +306,7 @@ function renderDashboard() {
     const resolved = wins.length + losses.length;
     const winRate = resolved > 0 ? (wins.length / resolved) * 100 : 0;
     const totalInvested = allResults.reduce((s, d) => s + d.invested, 0);
+    const totalVolume = allResults.reduce((s, d) => s + d.invested + d.sold + d.redeemed, 0);
     const totalPnl = allResults.reduce((s, d) => s + d.pnl, 0);
     const best = allResults.length > 0
         ? allResults.reduce((b, d) => (d.pnl > b.pnl ? d : b), allResults[0])
@@ -330,7 +331,7 @@ function renderDashboard() {
     <div class="stats-grid">
       ${sc("Total Bets", String(allResults.length), `${wins.length} ✓  ${losses.length} ✗  ${open.length} ◷`, "blue", 0)}
       ${sc("Win Rate", winRate.toFixed(1) + "%", `${wins.length} of ${resolved} resolved`, "blue", 1)}
-      ${sc("Total Invested", "$" + totalInvested.toFixed(2), "Total amount wagered", "", 2)}
+      ${sc("Total Volume", "$" + totalVolume.toFixed(2), "Total USDC traded", "", 2)}
       ${sc("Profit / Loss", (totalPnl >= 0 ? "+" : "") + "$" + totalPnl.toFixed(2), totalPnl >= 0 ? "Overall profit" : "Overall loss", totalPnl >= 0 ? "positive" : "negative", 3)}
       ${best ? sc("Best Win", "+$" + best.pnl.toFixed(2), best.market.substring(0, 34), "positive", 4) : ""}
       ${worst ? sc("Worst Loss", "-$" + Math.abs(worst.pnl).toFixed(2), worst.market.substring(0, 34), "negative", 5) : ""}
